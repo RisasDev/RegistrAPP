@@ -1,3 +1,7 @@
+.text-center {
+  text-align: center;
+}
+
 #container {
   text-align: center;
 
@@ -24,4 +28,19 @@
 
 #container a {
   text-decoration: none;
+}
+#container #carga {
+  text-align: center;
+  display: block;
+  margin: auto;
+  width: fit-content;
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+#container .login img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
 }

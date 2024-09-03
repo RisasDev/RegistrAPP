@@ -51,7 +51,7 @@ export class HomePage {
       .addElement(mainTitle)
       .duration(1500)
       .iterations(Infinity)
-      .fromTo('transform', 'translateX(0px)', 'translateX(200px)');
+      .fromTo('transform', 'translateX(-100px)', 'translateX(400px)');
     
       animation.play();
   }
@@ -92,4 +92,17 @@ export class HomePage {
       //Tampoco funciona
     }
   }
+
+  showPassword = false;
+  passwordtoggleicon = 'eye'
+
+  togglepassword(): void {
+    this.showPassword = !this.showPassword;
+    if(this.passwordtoggleicon == 'eye') {
+      this.passwordtoggleicon = 'eye-off'
+    }else{
+      this.passwordtoggleicon = 'eye'
+    }
+  }
+
 }

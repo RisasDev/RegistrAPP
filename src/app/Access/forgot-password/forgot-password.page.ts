@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ForgotPasswordPage implements OnInit {
 
    /* Objeto JSON para usuario */
-   user = {
+  user = {
     username: ''
   };
 

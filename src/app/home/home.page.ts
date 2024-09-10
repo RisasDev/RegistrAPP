@@ -49,7 +49,7 @@ export class HomePage {
     const mainTitle = document.querySelector("#main-title") as HTMLElement;
     const animation = this.animationController.create()
       .addElement(mainTitle)
-      .duration(1500)
+      .duration(2000)
       .iterations(Infinity)
       .fromTo('transform', 'translateX(-100px)', 'translateX(400px)');
     

@@ -1,0 +1,20 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title id="titulo">Página no encontrada</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Error 404</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-card>
+    <br>
+    <ion-label>Error 404</ion-label>
+    <img id="clown" src="../../../assets/img/clown-clown-meme.gif" alt="Payaso">
+    <br>
+    <ion-button [routerLink]="['/home']">Volver</ion-button>
+  </ion-card>
+</ion-content>

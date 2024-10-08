@@ -12,11 +12,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: '**',
-    redirectTo: 'e404',
-    pathMatch: 'full'
-  },
-  {
     path: 'register',
     loadChildren: () => import('./Access/register/register.module').then( m => m.RegisterPageModule)
   },
@@ -29,10 +24,13 @@ const routes: Routes = [
     loadChildren: () => import('./Access/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
-    path: 'e404',
+    path: 'controller',
+    loadChildren: () => import('./Admin/controller/controller.module').then( m => m.ControllerPageModule)
+  },
+  {
+    path: '**',
     loadChildren: () => import('./app/e404/e404.module').then( m => m.E404PageModule)
   },
-
 ];
 
 @NgModule({

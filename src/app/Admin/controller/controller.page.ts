@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIControllerService } from 'src/app/Servicios/apicontroller.service';
+import { ApiService } from 'src/app/servicios/api.service';
 
 @Component({
   selector: 'app-controller',
@@ -9,26 +9,25 @@ import { APIControllerService } from 'src/app/Servicios/apicontroller.service';
 export class ControllerPage implements OnInit {
 
   users: any[] = [];
-  constructor(private api: APIControllerService) { }
+
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.cargarUsuarios();
+    this.apiService.getUsers().subscribe((data: any) => {
+      this.users = data;
+    });
   }
 
-  cargarUsuarios() {
-    this.api.getUsers().subscribe(
-      (data) => {
-        this.users = data
-        console.log(this.users)
-      },
-      (error) => {
-        console.log("Error en la llamada :" + error)
-      });
-  }
-  modificarUsuario(id: any) {
+  createUser() {
+    const newUser = { 
+      username: 'Mauricio', 
+      email: 'ma.urrutiac@duocuc.cl'
+    };
+    
+    this.apiService.createUser(newUser).subscribe((response) => {
+      console.log(response);
 
-  }
-  eliminarUsuario(id: any) {
-
+      this.ngOnInit();
+    });
   }
 }

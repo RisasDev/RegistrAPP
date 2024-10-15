@@ -10,7 +10,7 @@ import { AnimationController } from '@ionic/angular';
 export class HomePage {
   /* Objeto JSON para usuario */
   user = {
-    username: '',
+    email: '',
     password: '',
   };
   /* mensaje de respuesta */
@@ -63,13 +63,13 @@ export class HomePage {
     this.spinner = !this.spinner;
   }
   validar() {
-    if (this.user.username.length != 0) {
+    if (this.user.email.length != 0) {
       if (this.user.password.length != 0) {
         //Funciona
         this.mensaje = 'Conexion exitosa';
         let navigationExtras: NavigationExtras = {
           state: {
-            username: this.user.username,
+            email: this.user.email,
             password: this.user.password,
           },
         };

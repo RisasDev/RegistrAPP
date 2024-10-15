@@ -17,17 +17,4 @@ export class ControllerPage implements OnInit {
       this.users = data;
     });
   }
-
-  createUser() {
-    const newUser = { 
-      username: 'Mauricio', 
-      email: 'ma.urrutiac@duocuc.cl'
-    };
-    
-    this.apiService.createUser(newUser).subscribe((response) => {
-      console.log(response);
-
-      this.ngOnInit();
-    });
-  }
 }

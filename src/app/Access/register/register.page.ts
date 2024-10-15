@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { AuthenticatorService } from 'src/app/servicios/authenticator.service';
 
 @Component({
   selector: 'app-register',
@@ -9,16 +10,16 @@ import { NavigationExtras, Router } from '@angular/router';
 export class RegisterPage implements OnInit {
 
   user = {
-    username: '',
     rut: '',
-    name: '',
+    email: '',
+    firstname: '',
     lastname: '',
-    birthdate: '',
+    birthdate: new Date(),
     password: '',
     confirmPassword: ''
   };
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authenticatorService: AuthenticatorService) {
   }
 
   ngOnInit() {
@@ -77,5 +78,18 @@ export class RegisterPage implements OnInit {
     else {
       this.passwordFeedback = 'La contraseña está vacia';
     }
+  }
+
+  registerUser() {
+    this.authenticatorService.createUser(
+      this.user.rut,
+      this.user.email,
+      this.user.firstname,
+      this.user.lastname,
+      this.user.birthdate,
+      this.user.password
+    );
+
+    console.log("SE HA REGISTRADO AL USUARIO: " + this.user.email);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { AuthenticatorService } from 'src/app/servicios/authenticator.service';
 
 @Component({
@@ -11,6 +12,7 @@ export class RegisterPage implements OnInit {
 
   user = {
     rut: '',
+    dvrut: '',
     email: '',
     firstname: '',
     lastname: '',
@@ -19,7 +21,7 @@ export class RegisterPage implements OnInit {
     confirmPassword: ''
   };
 
-  constructor(private router: Router, private authenticatorService: AuthenticatorService) {
+  constructor(private router: Router, private authenticatorService: AuthenticatorService, private toastController: ToastController) {
   }
 
   ngOnInit() {
@@ -81,15 +83,65 @@ export class RegisterPage implements OnInit {
   }
 
   registerUser() {
-    this.authenticatorService.createUser(
+    var rut = this.user.rut;
+
+    if (!rut) {
+      this.showAlert('RUT');
+      return;
+    }
+
+    var email = this.user.email;
+
+    if (!email) {
+      this.showAlert('Email');
+      return;
+    }
+    else if (!email.endsWith("@duocuc.cl") || !email.endsWith("@profesor.duoc.cl")) {
+      this.showAlert('Email', 'El email ingresado no es institucional.');
+      return;
+    }
+
+    var firstname = this.user.firstname;
+
+    if (!firstname) {
+      this.showAlert('Nombre');
+      return;
+    }
+
+    
+
+
+    this.user.dvrut = this.user.rut.slice(-1);
+    console.log(this.user.dvrut);
+
+
+    /*this.authenticatorService.createUser(
       this.user.rut,
+      this.user.dvrut,
       this.user.email,
       this.user.firstname,
       this.user.lastname,
       this.user.birthdate,
       this.user.password
-    );
+    );*/
 
     console.log("SE HA REGISTRADO AL USUARIO: " + this.user.email);
+  }
+
+  async showAlert(campo: string, message?: string) {
+    if (!message) {
+      message = `Error en el campo: ${campo}`;
+    }
+    else {
+      message = message;
+    }
+
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,
+      position: 'top',
+      color: 'danger',
+    });
+    toast.present();
   }
 }

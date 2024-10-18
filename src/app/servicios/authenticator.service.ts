@@ -8,9 +8,10 @@ export class AuthenticatorService {
 
   constructor(private apiService: ApiService) { }
 
-  async createUser(rut: String, email: String, firstname: String, lastname: String, birthdate: Date, password: String) {
+  async createUser(rut: Number, dvrut: String, email: String, firstname: String, lastname: String, birthdate: Date, password: String) {
     const newUser = { 
       rut: rut, 
+      dvrut: dvrut,
       email: email,
       firstname: firstname,
       lastname: lastname,

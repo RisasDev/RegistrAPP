@@ -12,7 +12,6 @@ export class RegisterPage implements OnInit {
 
   user = {
     rut: '',
-    dvrut: '',
     email: '',
     firstname: '',
     lastname: '',
@@ -57,75 +56,124 @@ export class RegisterPage implements OnInit {
 
   passwordFeedback = '';
 
-  validarPassword() {
-    if (this.user.password.length != 0) {
-      if (this.user.password.length >= 8 && this.user.password.length <= 24) {
-        this.passwordFeedback = '';
-
-        let navigationExtras: NavigationExtras = {
-          /*state: { // para registrar los datos del usuario
-            username: this.user.username,
-            password: this.user.password,
-          },*/
-        };
-
-        setTimeout(() => {
-          this.router.navigate(['/home'], navigationExtras);
-        }, 1000);
-      } 
-      else {
-        this.passwordFeedback = 'La contraseña debe tener entre 8 y 24 caracteres.';
-      }
-    }
-    else {
-      this.passwordFeedback = 'La contraseña está vacia';
-    }
+  validarPassword(password: string): boolean {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    return !regex.test(password);
   }
 
   registerUser() {
-    var rut = this.user.rut;
+    var rut = this.user.rut.replace(' ', '');
 
     if (!rut) {
       this.showAlert('RUT');
       return;
     }
+    else if (!this.validateRut(rut)) {
+      this.showAlert('RUT', 'El RUT ingresado no es válido.');
+      return;
+    }
+    else if (this.authenticatorService.isRegistered(rut)) {
+      this.showAlert('RUT', 'El RUT ingresado ya está registrado.');
+      return;
+    }
 
-    var email = this.user.email;
+    var email = this.user.email.replace(' ', '');
 
     if (!email) {
       this.showAlert('Email');
       return;
     }
-    else if (!email.endsWith("@duocuc.cl") || !email.endsWith("@profesor.duoc.cl")) {
+    else if (!email.endsWith("@duocuc.cl") && !email.endsWith("@profesor.duoc.cl")) {
       this.showAlert('Email', 'El email ingresado no es institucional.');
       return;
     }
 
-    var firstname = this.user.firstname;
+    var firstname = this.user.firstname.replace(' ', '');
 
     if (!firstname) {
       this.showAlert('Nombre');
       return;
     }
 
-    
+    var lastname = this.user.lastname.replace(' ', '');
 
+    if (!lastname) {
+      this.showAlert('Apellido');
+      return;
+    }
 
-    this.user.dvrut = this.user.rut.slice(-1);
-    console.log(this.user.dvrut);
+    var birthdate = this.user.birthdate;
 
+    if (!birthdate) {
+      this.showAlert('Fecha de Nacimiento');
+      return;
+    }
 
-    /*this.authenticatorService.createUser(
-      this.user.rut,
-      this.user.dvrut,
-      this.user.email,
-      this.user.firstname,
-      this.user.lastname,
-      this.user.birthdate,
-      this.user.password
-    );*/
+    var password = this.user.password.replace(' ', '');
 
-    console.log("SE HA REGISTRADO AL USUARIO: " + this.user.email);
+    if (this.validarPassword(password)) {
+      this.showAlert('Contraseña', 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
+      return;
+    }
+
+    var confirmPassword = this.user.confirmPassword.replace(' ', '');
+
+    if (password != confirmPassword) {
+      this.showAlert('Confirmar Contraseña', 'Las contraseñas no coinciden.');
+      return;
+    }
+
+    rut = rut
+      .replace(' ', '')
+      .replace(/\./g, '')
+      .replace(/-/g, '')
+      .slice(0, -1);
+
+    var dvrut = rut.slice(-1).replace(' ', '');
+    var role = email.endsWith("@duocuc.cl") ? 'Estudiante' : 'Profesor';
+
+    this.authenticatorService.createUser(
+      Number(rut),
+      dvrut,
+      email,
+      firstname,
+      lastname,
+      birthdate,
+      password,
+      role
+    );
+
+    this.showRegisterAlert();
+
+    let navigationExtras: NavigationExtras = {
+      state: {
+        rut: rut,
+        firstname: firstname,
+        lastname: lastname,
+      },
+    };
+
+    setTimeout(() => {
+      this.router.navigate(['/home'], navigationExtras);
+    }, 1000);
+  }
+
+  async getUser() {
+    var rut = this.user.rut;
+    rut = this.truncateRut(rut).slice(0, -1);
+
+    this.authenticatorService.getUser(rut);
+    this.authenticatorService.isRegistered(rut);
+  }
+
+  async showRegisterAlert() {
+    const toast = await this.toastController.create({
+      message: 'Usuario registrado con éxito.',
+      duration: 3000,
+      position: 'top',
+      color: 'success',
+    });
+    toast.present();
   }
 
   async showAlert(campo: string, message?: string) {
@@ -143,5 +191,33 @@ export class RegisterPage implements OnInit {
       color: 'danger',
     });
     toast.present();
+  }
+
+  validateRut(rut: string): boolean {
+    const cleanRut = this.truncateRut(rut).toUpperCase();
+  
+    if (cleanRut.length < 2) return false;
+  
+    const body = cleanRut.slice(0, -1);
+    const dv = cleanRut.slice(-1);
+  
+    if (!/^\d+$/.test(body)) return false;
+
+    let sum = 0;
+    let multiplier = 2;
+  
+    for (let i = body.length - 1; i >= 0; i--) {
+      sum += parseInt(body[i], 10) * multiplier;
+      multiplier = multiplier < 7 ? multiplier + 1 : 2;
+    }
+  
+    const calculatedDv = 11 - (sum % 11);
+    const expectedDv = calculatedDv === 11 ? '0' : calculatedDv === 10 ? 'K' : calculatedDv.toString();
+  
+    return expectedDv === dv;
+  }
+
+  truncateRut(rut: string): string {
+    return rut.replace(/\./g, '').replace(/-/g, '').replace(' ', '');
   }
 }

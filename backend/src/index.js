@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoDB = require('mongodb');
-const cors = require('cors'); // Para permitir peticiones desde el frontend (Angular)
+const cors = require('cors');
 
 const app = express();
 app.use(cors());

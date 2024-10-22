@@ -23,53 +23,32 @@ export class AuthenticatorService {
     };
     
     this.apiService.createUser(newUser).subscribe((response) => {
-      console.log(response);
+      console.log("Usuario creado", response);
     });
   }
 
-  async loginUser(rut: any, password: any) {
-    const user = await this.getUser(rut);
-
-    if (user == null) return false;
-
-    if (user.rut == rut && user.password == password) {
-      this.connnectionStatus = true;
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  async getUser(rut: any): Promise<any> {
-    console.log("rut: " + rut);
-    var user = null;
-
-    this.apiService.getUsers().subscribe((response) => {
-      response.forEach((element: any) => {
-        if (element.rut == rut) {
-          user = element;
+  async loginUser(email: any, password: any) {
+    return new Promise((resolve, reject) => {
+      this.apiService.getUser(email).subscribe(
+        (response) => {
+          if (response != null) {
+            if (response.email == email && response.password == password) {
+              resolve(true);
+            }
+            else {
+              resolve(false);
+            }
+          }
+          else {
+            resolve(false);
+          }
+        },
+        (error) => {
+          reject(error);
         }
-      });
+      );
     });
-
-    console.log("user: " + user);
-
-    return user;
   }
-
-  isRegistered(rut: any) {
-    // Almacenamos el resultado de getUser en una variable
-    const user = this.getUser(rut);
-    console.log(user);
-  
-    // Verificamos si es undefined o null
-    const isUndefined = user === undefined || user === null;
-  
-    // Devolvemos si es distinto de null (o undefined en este caso)
-    return user != null;
-  }
-  
 
   isConected() {
     return this.connnectionStatus;

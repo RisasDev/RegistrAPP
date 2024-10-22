@@ -32,6 +32,22 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+app.get('/api/users/:email', async (req, res) => {
+  try {
+    const email = req.params.email;
+    const user = await usersCollection.findOne({ email });
+    
+    if (user) {
+      res.status(200).json(user);
+    } 
+    else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuario' });
+  }
+});
+
 app.post('/api/users', async (req, res) => {
   try {
     const newUser = req.body;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AuthenticatorService } from 'src/app/servicios/authenticator.service';
+import { ApiService } from 'src/app/servicios/api.service';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,7 @@ export class RegisterPage implements OnInit {
     confirmPassword: ''
   };
 
-  constructor(private router: Router, private authenticatorService: AuthenticatorService, private toastController: ToastController) {
+  constructor(private router: Router, private authenticatorService: AuthenticatorService, private toastController: ToastController, private apiService: ApiService) {
   }
 
   ngOnInit() {
@@ -56,11 +57,6 @@ export class RegisterPage implements OnInit {
 
   passwordFeedback = '';
 
-  validarPassword(password: string): boolean {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    return !regex.test(password);
-  }
-
   registerUser() {
     var rut = this.user.rut.replace(' ', '');
 
@@ -70,10 +66,6 @@ export class RegisterPage implements OnInit {
     }
     else if (!this.validateRut(rut)) {
       this.showAlert('RUT', 'El RUT ingresado no es válido.');
-      return;
-    }
-    else if (this.authenticatorService.isRegistered(rut)) {
-      this.showAlert('RUT', 'El RUT ingresado ya está registrado.');
       return;
     }
 
@@ -87,6 +79,15 @@ export class RegisterPage implements OnInit {
       this.showAlert('Email', 'El email ingresado no es institucional.');
       return;
     }
+
+    this.apiService.isRegistered(email).then((isRegistered) => {
+      if (isRegistered) {
+        this.showAlert('Email', 'El email ingresado ya está registrado.');
+        return;
+      }
+    }).catch((error) => {
+      console.error('Error al verificar el registro del email:', error);
+    });
 
     var firstname = this.user.firstname.replace(' ', '');
 
@@ -110,12 +111,6 @@ export class RegisterPage implements OnInit {
     }
 
     var password = this.user.password.replace(' ', '');
-
-    if (this.validarPassword(password)) {
-      this.showAlert('Contraseña', 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.');
-      return;
-    }
-
     var confirmPassword = this.user.confirmPassword.replace(' ', '');
 
     if (password != confirmPassword) {
@@ -129,7 +124,7 @@ export class RegisterPage implements OnInit {
       .replace(/-/g, '')
       .slice(0, -1);
 
-    var dvrut = rut.slice(-1).replace(' ', '');
+    var dvrut = this.user.rut.slice(-1).replace(' ', '');
     var role = email.endsWith("@duocuc.cl") ? 'Estudiante' : 'Profesor';
 
     this.authenticatorService.createUser(
@@ -156,14 +151,6 @@ export class RegisterPage implements OnInit {
     setTimeout(() => {
       this.router.navigate(['/home'], navigationExtras);
     }, 1000);
-  }
-
-  async getUser() {
-    var rut = this.user.rut;
-    rut = this.truncateRut(rut).slice(0, -1);
-
-    this.authenticatorService.getUser(rut);
-    this.authenticatorService.isRegistered(rut);
   }
 
   async showRegisterAlert() {

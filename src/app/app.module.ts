@@ -12,7 +12,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatProgressSpinnerModule],
+  imports: [BrowserModule, IonicModule.forRoot({mode: 'md'}), AppRoutingModule, MatProgressSpinnerModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideAnimationsAsync(), provideHttpClient()],
   bootstrap: [AppComponent],
 })

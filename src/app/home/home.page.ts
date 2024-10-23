@@ -3,7 +3,6 @@ import { NavigationExtras, Router } from '@angular/router';
 import { AnimationController } from '@ionic/angular';
 import { AuthenticatorService } from '../servicios/authenticator.service';
 import { ApiService } from '../servicios/api.service';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -48,35 +47,82 @@ export class HomePage {
     this.spinner = !this.spinner;
   }
 
+  /* Método para validar si la contraseña es robusta */
+  esContrasenaRobusta(password: string): boolean {
+    const longitudMinima = 8;
+    const tieneMayuscula = /[A-Z]/.test(password);  // Al menos una mayúscula
+    const tieneMinuscula = /[a-z]/.test(password);  // Al menos una minúscula
+    const tieneNumero = /[0-9]/.test(password);     // Al menos un número
+    const tieneEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);  // Al menos un carácter especial
+
+    return (
+      password.length >= longitudMinima &&
+      tieneMayuscula &&
+      tieneMinuscula &&
+      tieneNumero &&
+      tieneEspecial
+    );
+  }
+
   async validar() {
-    if (
-      await this.authenticatorService.loginUser(
-        this.login.email,
-        this.login.password
-      )
-    ) {
-      this.mensaje = 'Conexion exitosa';
-
-      this.apiService.getUser(this.login.email).subscribe((response) => {
-        this.user = response;
-
-        let navigationExtras: NavigationExtras = {
-          state: {
-            user: this.user,
-          },
-        };
-
-        this.cambiarSpinner();
-
-        setTimeout(() => {
-          this.router.navigate(['/perfil'], navigationExtras);
-          this.cambiarSpinner();
-          this.mensaje = '';
-        }, 3000);
-      });
-    } else {
-      this.mensaje = 'Usuario o contraseña incorrectos';
+    // Validación del correo y contraseña
+    if (this.login.email.length === 0) {
+      this.mensaje = 'Correo vacío';
+      return;
     }
+    if (this.login.password.length === 0) {
+      this.mensaje = 'Contraseña vacía';
+      return;
+    }
+    if (!this.esContrasenaRobusta(this.login.password)) {
+      this.mensaje = 'La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres especiales.';
+      return;
+    }
+
+    // Extraemos el dominio del correo después del '@'
+    const domain = this.login.email.split('@')[1];
+
+    if (domain !== 'duocuc.cl' && domain !== 'profesor.duoc.cl' && domain !== 'cetecom.duoc.cl') {
+      this.mensaje = 'Dominio no válido. Debe ser "duocuc.cl", "profesor.duoc.cl" o "cetecom.duoc.cl"';
+      return;
+    }
+
+    // Verificamos si la combinación de correo y contraseña es válida
+    const loginValido = await this.authenticatorService.loginUser(this.login.email, this.login.password);
+    if (!loginValido) {
+      this.mensaje = 'Usuario o contraseña incorrectos';
+      return;
+    }
+
+    // Si la combinación es válida, se autentica al usuario
+    this.mensaje = 'Conexión exitosa';
+
+    // Obtenemos los datos del usuario desde la API
+    this.apiService.getUser(this.login.email).subscribe((response) => {
+      this.user = response;
+
+      let navigationExtras: NavigationExtras = {
+        state: {
+          user: this.user,
+        },
+      };
+
+      this.cambiarSpinner();
+
+      // Redirigir a la vista correspondiente según el dominio del correo
+      setTimeout(() => {
+        if (domain === 'duocuc.cl') {
+          this.router.navigate(['/perfil/alumno'], navigationExtras); // Redirige a la vista Alumno
+        } else if (domain === 'profesor.duoc.cl') {
+            this.router.navigate(['/perfil/docente'], navigationExtras); // Redirige a la vista Docente
+        } else if (domain === 'cetecom.duoc.cl') {
+            this.router.navigate(['/admin'], navigationExtras); // Redirige a la vista Admin
+        }
+        this.cambiarSpinner();
+        this.mensaje = '';
+      }, 3000);
+
+    });
   }
 
   showPassword = false;
@@ -84,10 +130,6 @@ export class HomePage {
 
   togglepassword(): void {
     this.showPassword = !this.showPassword;
-    if (this.passwordtoggleicon == 'eye') {
-      this.passwordtoggleicon = 'eye-off';
-    } else {
-      this.passwordtoggleicon = 'eye';
-    }
+    this.passwordtoggleicon = this.passwordtoggleicon === 'eye' ? 'eye-off' : 'eye';
   }
 }

@@ -7,7 +7,19 @@ const routes: Routes = [
   {
     path: '',
     component: PerfilPage
+  },  {
+    path: 'alumno',
+    loadChildren: () => import('./alumno/alumno.module').then( m => m.AlumnoPageModule)
+  },
+  {
+    path: 'docente',
+    loadChildren: () => import('./docente/docente.module').then( m => m.DocentePageModule)
+  },
+  {
+    path: 'qr-view',
+    loadChildren: () => import('./qr-view/qr-view.module').then( m => m.QrViewPageModule)
   }
+
 ];
 
 @NgModule({

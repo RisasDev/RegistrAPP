@@ -14,7 +14,11 @@
     </ion-toolbar>
   </ion-header>
   <div id="container">
-    <h1>Bienvenido/a {{username}}</h1>
-
+    <h1>Bienvenido/a {{user.firstname}} {{user.lastname}}</h1>
   </div>
+  <div>
+    <h6>Has ingresado como {{user.role}}</h6>
+  </div>
+
+  <ion-button *ngIf="user.role === 'Profesor'" color="warning" fill="outline" [routerLink]="['/controller']">Ver Usuarios</ion-button>
 </ion-content>

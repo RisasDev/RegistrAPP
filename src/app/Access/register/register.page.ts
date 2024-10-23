@@ -111,6 +111,12 @@ export class RegisterPage implements OnInit {
     }
 
     var password = this.user.password.replace(' ', '');
+
+    if (!password) {
+      this.showAlert('Contraseña');
+      return;
+    }
+
     var confirmPassword = this.user.confirmPassword.replace(' ', '');
 
     if (password != confirmPassword) {

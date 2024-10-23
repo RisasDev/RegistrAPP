@@ -34,6 +34,8 @@ export class AuthenticatorService {
           if (response != null) {
             if (response.email == email && response.password == password) {
               resolve(true);
+
+              this.connnectionStatus = true;
             }
             else {
               resolve(false);

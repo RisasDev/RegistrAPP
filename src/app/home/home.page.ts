@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AnimationController } from '@ionic/angular';
+import { AuthenticatorService } from '../servicios/authenticator.service';
+import { ApiService } from '../servicios/api.service';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -8,101 +11,83 @@ import { AnimationController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  /* Objeto JSON para usuario */
-  user = {
+  login = {
     email: '',
     password: '',
   };
-  /* mensaje de respuesta */
+
+  user = {} as any;
+
   mensaje = '';
-  /* Estado de carga */
   spinner = false;
 
-  constructor(private router: Router, private animationController: AnimationController) {
-
-
-  }
-  /*ngAfterContentInit() {
-    this.animarLogin();
-  }
-  animarLogin() {
-    const loginIcon = document.querySelector(".login img") as HTMLElement;
-   
-    const animacion = this.animationController.create()
-      .addElement(loginIcon)
-      .duration(4000)
-      .iterations(Infinity)
-      .keyframes([
-        { offset: 0, opacity: '1', width: "200px", height: "200px" },
-        { offset: 0.5, opacity: '0.5', width: "150px", height: "150px" },
-        { offset: 1, opacity: '1', width: "200px", height: "200px" }
-      ]);
-    animacion.play();
-  }
-  */
+  constructor(
+    private router: Router,
+    private animationController: AnimationController,
+    private authenticatorService: AuthenticatorService,
+    private apiService: ApiService
+  ) {}
 
   ngAfterContentInit() {
     this.animarTitulo();
   }
 
   animarTitulo() {
-    const mainTitle = document.querySelector("#main-title") as HTMLElement;
-    const animation = this.animationController.create()
+    const mainTitle = document.querySelector('#main-title') as HTMLElement;
+    const animation = this.animationController
+      .create()
       .addElement(mainTitle)
       .duration(2000)
       .iterations(Infinity)
       .fromTo('transform', 'translateX(-100px)', 'translateX(400px)');
-    
-      animation.play();
-  }
-  
 
-  /* NGIF = permite realizar una validacion entre html y ts validando que la variable sea true o false */
-  /* Permite cambiar el valor por defecto del spinner y comprobarlo con ngIF */
+    animation.play();
+  }
+
   cambiarSpinner() {
     this.spinner = !this.spinner;
   }
-  validar() {
-    if (this.user.email.length != 0) {
-      if (this.user.password.length != 0) {
-        //Funciona
-        this.mensaje = 'Conexion exitosa';
+
+  async validar() {
+    if (
+      await this.authenticatorService.loginUser(
+        this.login.email,
+        this.login.password
+      )
+    ) {
+      this.mensaje = 'Conexion exitosa';
+
+      this.apiService.getUser(this.login.email).subscribe((response) => {
+        this.user = response;
+
         let navigationExtras: NavigationExtras = {
           state: {
-            email: this.user.email,
-            password: this.user.password,
+            user: this.user,
           },
         };
-        this.cambiarSpinner();
-        /* setTimeout = permite generar un pequeño delay para realizar la accion */
-        setTimeout(() => {
 
+        this.cambiarSpinner();
+
+        setTimeout(() => {
           this.router.navigate(['/perfil'], navigationExtras);
           this.cambiarSpinner();
-          this.mensaje = "";
+          this.mensaje = '';
         }, 3000);
-      } else {
-        console.log('Contraseña vacia');
-        this.mensaje = 'Contraseña vacia';
-        //No funciona
-      }
+      });
     } else {
-      console.log('Usuario vacio');
-      this.mensaje = 'Usuario Vacio';
-      //Tampoco funciona
+      this.mensaje = 'Usuario o contraseña incorrectos';
     }
   }
 
   showPassword = false;
-  passwordtoggleicon = 'eye'
+  passwordtoggleicon = 'eye';
 
   togglepassword(): void {
     this.showPassword = !this.showPassword;
-    if(this.passwordtoggleicon == 'eye') {
-      this.passwordtoggleicon = 'eye-off'
-    }else{
-      this.passwordtoggleicon = 'eye'
+    if (this.passwordtoggleicon == 'eye') {
+      this.passwordtoggleicon = 'eye-off';
+    } else {
+      this.passwordtoggleicon = 'eye';
     }
   }
-
 }

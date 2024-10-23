@@ -29,11 +29,11 @@
         </div>
         <ion-list>
           <ion-item>
-            <ion-input [(ngModel)]="user.email" label="Email" labelPlacement="floating"
+            <ion-input [(ngModel)]="login.email" label="Email" labelPlacement="floating"
               placeholder="Ingrese su email"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-input label="Contraseña" [(ngModel)]="user.password" [type]="showPassword ? 'text' : 'password'" labelPlacement="floating" placeholder="Ingrese su contraseña"></ion-input>
+            <ion-input label="Contraseña" [(ngModel)]="login.password" [type]="showPassword ? 'text' : 'password'" labelPlacement="floating" placeholder="Ingrese su contraseña"></ion-input>
           <ion-icon slot="end" [name]="passwordtoggleicon" (click)="togglepassword()"></ion-icon>
           </ion-item>
           <ion-label>{{mensaje}}</ion-label>
@@ -47,7 +47,6 @@
           </div>
           <ion-button color="warning" fill="outline" (click)="validar()">Ingresar</ion-button>
           <ion-button color="warning" fill="outline" [routerLink]="['/register']">Registrar</ion-button>
-          <ion-button color="warning" fill="outline" [routerLink]="['/controller']">Admin</ion-button>
           <ion-card-subtitle [routerLink]="['/forgot-password']">¿Olvido su contraseña?</ion-card-subtitle>
         </ion-list>
       </ion-card-content>

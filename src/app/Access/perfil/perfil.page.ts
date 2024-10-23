@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/servicios/api.service';
 
 @Component({
   selector: 'app-perfil',
@@ -7,17 +8,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./perfil.page.scss'],
 })
 export class PerfilPage implements OnInit {
-  username = '';
-  constructor(private router: Router) {
+
+  user = {} as any;
+  users: any[] = [];
+
+  constructor(private router: Router, private apiService: ApiService) {
     const navegacion = this.router.getCurrentNavigation();
     const state = navegacion?.extras.state as {
-      username: '';
-      password: '';
+      user: any;
     };
-    this.username = state.username;
-    //Console.log
-    //Mensaje bienvenida
+
+    this.user = state.user;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.apiService.getUsers().subscribe((data: any) => {
+      this.users = data;
+    });
+  }
 }

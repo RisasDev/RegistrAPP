@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alumno',
@@ -7,13 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AlumnoPage implements OnInit {
 
-  constructor() { }
+  user = {} as any;
+
+  constructor(private router: Router) {
+    const navegacion = this.router.getCurrentNavigation();
+    const state = navegacion?.extras.state as {
+      user: any;
+    };
+
+    this.user = state.user;
+  }
 
   ngOnInit() {
   }
 
   escanearQr() {
-    // Lógica para escanear un QR
-    console.log('Escanear QR');
+    console.log('Abriendo camara para validar QR...');
   }
 }

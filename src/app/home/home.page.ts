@@ -47,13 +47,12 @@ export class HomePage {
     this.spinner = !this.spinner;
   }
 
-  /* Método para validar si la contraseña es robusta */
   esContrasenaRobusta(password: string): boolean {
     const longitudMinima = 8;
-    const tieneMayuscula = /[A-Z]/.test(password);  // Al menos una mayúscula
-    const tieneMinuscula = /[a-z]/.test(password);  // Al menos una minúscula
-    const tieneNumero = /[0-9]/.test(password);     // Al menos un número
-    const tieneEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);  // Al menos un carácter especial
+    const tieneMayuscula = /[A-Z]/.test(password);
+    const tieneMinuscula = /[a-z]/.test(password);
+    const tieneNumero = /[0-9]/.test(password);
+    const tieneEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     return (
       password.length >= longitudMinima &&
@@ -113,9 +112,11 @@ export class HomePage {
       setTimeout(() => {
         if (domain === 'duocuc.cl') {
           this.router.navigate(['/perfil/alumno'], navigationExtras); // Redirige a la vista Alumno
-        } else if (domain === 'profesor.duoc.cl') {
+        } 
+        else if (domain === 'profesor.duoc.cl') {
             this.router.navigate(['/perfil/docente'], navigationExtras); // Redirige a la vista Docente
-        } else if (domain === 'cetecom.duoc.cl') {
+        } 
+        else if (domain === 'cetecom.duoc.cl') {
             this.router.navigate(['/admin'], navigationExtras); // Redirige a la vista Admin
         }
         this.cambiarSpinner();

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; // Importa el Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-docente',
@@ -8,13 +8,12 @@ import { Router } from '@angular/router'; // Importa el Router
 })
 export class DocentePage implements OnInit {
 
-  constructor(private router: Router) { } // Inyecta el Router
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
   generarQr() {
-    // Navega a la vista del QR
     this.router.navigate(['/perfil/qr-view']);
   }
 }

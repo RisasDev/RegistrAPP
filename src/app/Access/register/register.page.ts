@@ -116,6 +116,10 @@ export class RegisterPage implements OnInit {
       this.showAlert('Contraseña');
       return;
     }
+    else if (!this.esContrasenaRobusta(password)) {
+      this.showAlert('Contraseña', 'La contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres especiales.');
+      return;
+    }
 
     var confirmPassword = this.user.confirmPassword.replace(' ', '');
 
@@ -212,5 +216,21 @@ export class RegisterPage implements OnInit {
 
   truncateRut(rut: string): string {
     return rut.replace(/\./g, '').replace(/-/g, '').replace(' ', '');
+  }
+
+  esContrasenaRobusta(password: string): boolean {
+    const longitudMinima = 8;
+    const tieneMayuscula = /[A-Z]/.test(password);
+    const tieneMinuscula = /[a-z]/.test(password);
+    const tieneNumero = /[0-9]/.test(password);
+    const tieneEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= longitudMinima &&
+      tieneMayuscula &&
+      tieneMinuscula &&
+      tieneNumero &&
+      tieneEspecial
+    );
   }
 }

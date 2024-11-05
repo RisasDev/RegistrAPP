@@ -36,9 +36,9 @@ export class HomePage {
     const animation = this.animationController
       .create()
       .addElement(mainTitle)
-      .duration(2000)
+      .duration(3000)
       .iterations(Infinity)
-      .fromTo('transform', 'translateX(-100px)', 'translateX(400px)');
+      .fromTo('transform', 'translateX(-100px)', 'translateX(100%)');
 
     animation.play();
   }

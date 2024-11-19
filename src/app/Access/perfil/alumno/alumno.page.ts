@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
+import { LensFacing } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
   selector: 'app-alumno',
@@ -9,20 +12,42 @@ import { Router } from '@angular/router';
 export class AlumnoPage implements OnInit {
 
   user = {} as any;
+  scanResult = '';
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router, 
+    private modalController: ModalController) {
     const navegacion = this.router.getCurrentNavigation();
     const state = navegacion?.extras.state as {
-      user: any;
+    user: any;
     };
 
     this.user = state.user;
+
   }
 
   ngOnInit() {
   }
 
-  escanearQr() {
-    console.log('Abriendo camara para validar QR...');
+  async startScan() {
+    const modal = await this.modalController.create({
+    component: BarcodeScanningModalComponent,
+    cssClass: 'barcode-scanning-modal',
+    showBackdrop: false,
+    componentProps: { 
+      formats: [],
+      LensFacing: LensFacing.Back
+     }
+    });
+  
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if(data){
+      this.scanResult = data?.barcode?.displayValue;
+    }
+  
   }
+
 }

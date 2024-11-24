@@ -13,7 +13,7 @@ import { DocentePage } from './docente.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    DocentePageRoutingModule
+    DocentePageRoutingModule,
   ],
   declarations: [DocentePage]
 })

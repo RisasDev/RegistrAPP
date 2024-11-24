@@ -2,6 +2,27 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    align-items: center;
     height: 100%;
   }
   
+.submit {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #f4f4f4;
+    color: #000;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .submit:hover {
+    background-color: #000;
+    color: #f4f4f4;
+}

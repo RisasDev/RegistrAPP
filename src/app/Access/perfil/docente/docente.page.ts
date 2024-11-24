@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 })
 export class DocentePage implements OnInit {
 
+  qrHours: number = 0;
+  qrMinutes: number = 0;
+
   constructor(private router: Router) { }
 
   ngOnInit() {

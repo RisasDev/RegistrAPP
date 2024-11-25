@@ -8,7 +8,10 @@ export class AuthenticatorService {
 
   connnectionStatus: boolean = false;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+    const isConnected = localStorage.getItem('isConnected') === 'true';
+    this.connnectionStatus = isConnected;
+   }
 
   async createUser(rut: Number, dvrut: String, email: String, firstname: String, lastname: String, birthdate: Date, password: String, role: String) {
     const newUser = { 
@@ -22,9 +25,14 @@ export class AuthenticatorService {
       role: role
     };
     
-    this.apiService.createUser(newUser).subscribe((response) => {
-      console.log("Usuario creado", response);
-    });
+    this.apiService.createUser(newUser).subscribe({
+      next: (response) => {
+        console.log('Usuario creado exitosamente', response);
+      },
+      error: (err) => {
+        console.error('Error al crear usuario', err);
+      }
+    });       
   }
 
   async loginUser(email: any, password: any) {
@@ -32,16 +40,18 @@ export class AuthenticatorService {
       this.apiService.getUser(email).subscribe(
         (response) => {
           if (response != null) {
-            if (response.email == email && response.password == password) {
-              resolve(true);
-
+            if (response.email === email && response.password === password) {
               this.connnectionStatus = true;
-            }
-            else {
+  
+              // Guardar estado en localStorage
+              localStorage.setItem('isConnected', 'true');
+              localStorage.setItem('userEmail', email); // Guardar también el email si es necesario
+  
+              resolve(true);
+            } else {
               resolve(false);
             }
-          }
-          else {
+          } else {
             resolve(false);
           }
         },
@@ -50,9 +60,20 @@ export class AuthenticatorService {
         }
       );
     });
-  }
+  }  
 
   isConected() {
     return this.connnectionStatus;
   }
+
+  logoutUser() {
+    this.connnectionStatus = false;
+  
+    // Limpia el estado en localStorage
+    localStorage.removeItem('isConnected');
+    localStorage.removeItem('userEmail');
+  
+    console.log('Sesión cerrada');
+  }  
+
 }

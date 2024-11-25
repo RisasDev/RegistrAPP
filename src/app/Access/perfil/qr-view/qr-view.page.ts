@@ -11,7 +11,7 @@ import { LoadingController, Platform} from '@ionic/angular';
 })
 export class QrViewPage {
 
-  qrAssist = '';
+  qrAssist = 'github.com';
 
   constructor(
     private loadingController: LoadingController,

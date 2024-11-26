@@ -25,8 +25,4 @@ export class AlumnoPage implements OnInit {
   escanearQr() {
     console.log('Abriendo camara para validar QR...');
   }
-
-  logout() {
-    this.router.navigate(['/home']);
-  }
 }

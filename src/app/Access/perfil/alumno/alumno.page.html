@@ -14,7 +14,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
+  <div id="container" style="text-align: center; padding: 20px;">
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle>Opciones de QR {{user.firstname}} {{user.lastname}}</ion-card-subtitle>
@@ -27,10 +27,15 @@
         <ion-list>
           <ion-item>
             <ion-label>Escanear QR</ion-label>
-            <ion-button expand="full" (click)="escanearQr()">Escanear</ion-button>
+            <ion-button expand="full">Escanear</ion-button>
           </ion-item>
         </ion-list>
       </ion-card-content>
     </ion-card>
+
+    <ion-button class="submit ion-margin-top" expand="block">
+      Escanear
+      <ion-icon slot="end" name="scan-outline"></ion-icon>
+     </ion-button>
   </div>
 </ion-content>

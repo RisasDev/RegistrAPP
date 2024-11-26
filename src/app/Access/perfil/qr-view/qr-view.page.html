@@ -6,7 +6,6 @@
     <ion-title>Generar QR</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
   <div id="container" style="text-align: center; padding: 20px;">
     <ion-card>
@@ -14,14 +13,17 @@
         <ion-card-title>Tu Código QR</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <div *ngIf="qrData">
-          <!-- Aquí podrías usar una librería para generar QR -->
-          <img [src]="'https://api.qrserver.com/v1/create-qr-code/?data=' + qrData + '&size=200x200'" alt="Código QR"/>
-        </div>
-        <div *ngIf="!qrData">
-          <p>No hay datos para mostrar.</p>
+        <div id="qrImage">
+          <qr-code *ngIf="qrAssist" [value]="qrAssist" size="190" errorCorrectionLevel="M" />
+          <img *ngIf="!qrAssist" src="assets/img/qr-code-inverse.webp" alt="">
+          <h5 *ngIf="!qrAssist" class="ion-padding-top">No hay Qr Generado</h5>
         </div>
       </ion-card-content>
     </ion-card>
+    <!-- Button Share -->
+     <ion-button (click)="captureSceern()" *ngIf="qrAssist" class="submit ion-margin-top" expand="block">
+      Share
+      <ion-icon slot="end" name="share-social-outline"></ion-icon>
+     </ion-button>
   </div>
 </ion-content>

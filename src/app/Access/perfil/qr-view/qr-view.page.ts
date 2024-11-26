@@ -11,7 +11,7 @@ import { LoadingController, Platform} from '@ionic/angular';
 })
 export class QrViewPage {
 
-  qrAssist = '';
+  qrAssist = 'Prueba de QR Assist';
 
   constructor(
     private loadingController: LoadingController,
@@ -19,15 +19,14 @@ export class QrViewPage {
   ) {
   }
 
-  captureSceern() {
+  captureScreen() {
 
     const element = document.getElementById('qrImage') as HTMLElement;
     html2canvas(element).then((canvas: HTMLCanvasElement) => {
 
       this.downloadImage(canvas);
-      if (this.platform.is('capacitor'))this.shareImage(canvas);
+      if (this.platform.is('capacitor')) this.shareImage(canvas);
       else this.downloadImage(canvas);
-
     })
   }
 

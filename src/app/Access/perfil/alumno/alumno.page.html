@@ -27,10 +27,17 @@
         <ion-list>
           <ion-item>
             <ion-label>Escanear QR</ion-label>
-            <ion-button expand="full">Escanear</ion-button>
+            <ion-button (click)="startScan()" expand="full">Escanear</ion-button>
           </ion-item>
         </ion-list>
       </ion-card-content>
+
+      <ion-item class="result" *ngIf="scanResult" lines="none">
+        <ion-label>
+          <p>Resultado</p>
+          <div>{{scanResult}}</div>
+        </ion-label>
+      </ion-item>
     </ion-card>
   </div>
 </ion-content>

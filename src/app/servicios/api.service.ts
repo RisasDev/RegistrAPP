@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private apiUrl = 'http://144.217.243.109:3000/api/users';
+  private apiUrl = 'https://registrapp.risas.me/api/users';
 
   constructor(private http: HttpClient) { }
   

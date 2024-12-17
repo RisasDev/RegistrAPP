@@ -14,15 +14,15 @@
       </ion-card-header>
       <ion-card-content>
         <div id="qrImage">
-          <qr-code *ngIf="qrAssist" [value]="qrAssist" size="190" errorCorrectionLevel="M"/>
+          <qr-code *ngIf="qrAssist" [value]="qrAssist" size="190" errorCorrectionLevel="M" />
           <img *ngIf="!qrAssist" src="assets/img/qr-code-inverse.webp" alt="">
           <h5 *ngIf="!qrAssist" class="ion-padding-top">No hay QR generado</h5>
         </div>
       </ion-card-content>
     </ion-card>
-     <ion-button (click)="captureScreen()" *ngIf="qrAssist" class="submit ion-margin-top" expand="block">
+    <ion-button (click)="captureScreen()" *ngIf="qrAssist" class="submit ion-margin-top" expand="block">
       Share
       <ion-icon slot="end" name="share-social-outline"></ion-icon>
-     </ion-button>
+    </ion-button>
   </div>
 </ion-content>

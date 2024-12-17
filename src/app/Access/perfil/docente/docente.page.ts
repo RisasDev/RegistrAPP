@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-docente',
@@ -7,16 +7,30 @@ import { Router } from '@angular/router';
   styleUrls: ['./docente.page.scss'],
 })
 export class DocentePage implements OnInit {
-
+  user = {} as any;
   qrHours: number = 0;
   qrMinutes: number = 0;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    const navegacion = this.router.getCurrentNavigation();
+    const state = navegacion?.extras.state as {
+      user: any;
+    };
 
-  ngOnInit() {
+    this.user = state.user;
   }
 
+  ngOnInit() {}
+
   generarQr() {
-    this.router.navigate(['/perfil/qr-view']);
+    let navigationExtras: NavigationExtras = {
+      state: {
+        user: this.user,
+        qrHours: this.qrHours,
+        qrMinutes: this.qrMinutes,
+      },
+    };
+
+    this.router.navigate(['/perfil/qr-view'], navigationExtras);
   }
 }

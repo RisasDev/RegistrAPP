@@ -52,6 +52,21 @@ export class AuthenticatorService {
     });
   }
 
+  async createClass(id: String, profesor: String, fecha_inicio: Date, fecha_termino: Date, alumnos: any[], estado: boolean) {
+    const newClass = {
+      id: id,
+      profesor: profesor,
+      fecha_inicio: fecha_inicio,
+      fecha_termino: fecha_termino,
+      alumnos: alumnos,
+      estado: estado
+    };
+
+    this.apiService.createClass(newClass).subscribe((response) => {
+      console.log("Clase creada", response);
+    });
+  }
+
   isConected() {
     return this.connnectionStatus;
   }
